@@ -1,11 +1,11 @@
 import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
-import { CreateUserDTO, LoginUserDTO } from './users.dto';
-import { UsersService } from './users.service';
+import { CreateUserDTO, LoginUserDTO } from './user.dto';
+import { UserService } from './user.service';
 
 @Controller('users')
-export class UsersController {
+export class UserController {
 
-    constructor(private userService: UsersService) { }
+    constructor(private userService: UserService) { }
 
     @Post("/register")
     async createUser(@Res() res, @Body() createUserData: CreateUserDTO) {
@@ -27,7 +27,7 @@ export class UsersController {
                 message: 'USER NOT FOUND'
             });
         }
-        return res.status(HttpStatus.FOUND).json();
+        return res.status(HttpStatus.FOUND).json(user);
     }
 
 }
