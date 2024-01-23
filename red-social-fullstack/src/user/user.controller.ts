@@ -28,6 +28,6 @@ export class UserController {
         message: 'USER NOT FOUND',
       });
     }
-    return res.status(HttpStatus.FOUND).json(user);
+    return res.status(HttpStatus.OK).json(user);
   }
 }
