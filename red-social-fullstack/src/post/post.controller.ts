@@ -52,4 +52,16 @@ export class PostController {
       .status(HttpStatus.OK)
       .json(await this.postService.findAllPosts(fetchPostDTO));
   }
+
+  @UseGuards(UserGuard)
+  @Put('/like')
+  async likeHandler(
+    @Res() res,
+    @Body('checked') checked: boolean,
+    @Query('postId') postId: string,
+  ) {
+    return res
+      .status(HttpStatus.OK)
+      .json(await this.postService.likePost(postId, checked));
+  }
 }

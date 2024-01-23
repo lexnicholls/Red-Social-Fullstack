@@ -25,30 +25,28 @@ export class PostService {
       editPostDTO,
       { new: true },
     );
-    // if(postToUpdate.userId !== userId){
-    //   throw new HttpException('USER NOT FOUND', HttpStatus.NOT_FOUND);
-    // }
     return postToUpdate;
   }
 
   async deletePost(postId: string): Promise<void> {
     const postToDelete = await this.postModel.findById(postId);
-    if(!postToDelete){
+    if (!postToDelete) {
       throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
     }
-    // if(postToUpdate.userId !== userId){
-    //   throw new HttpException('USER NOT FOUND', HttpStatus.NOT_FOUND);
-    // }
-    await this.postModel.findByIdAndUpdate(
-      postId,
-      { deletedAt: Date.now() }
-    );
+    await this.postModel.findByIdAndUpdate(postId, { deletedAt: Date.now() });
   }
 
   async findAllPosts(fetchPostDTO: FetchPostDTO) {
     return this.postModel.find({
       title: { $regex: fetchPostDTO.title ?? '', $options: 'i' },
       deletedAt: undefined,
+    });
+  }
+
+  async likePost(postId: string, checked: boolean): Promise<Post> {
+    const postToLike = await this.postModel.findById(postId);
+    return await postToLike.updateOne({
+      likes: checked ? postToLike.likes + 1 : postToLike.likes - 1,
     });
   }
 }

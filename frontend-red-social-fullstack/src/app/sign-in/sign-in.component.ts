@@ -26,13 +26,13 @@ export class SignInComponent {
     private storageService: StorageService
   ) {}
 
-  ngOnInit(): void {  }
+  ngOnInit(): void {}
 
   onSignInUser() {
     const { email, password } = this.userForm.value;
     if (this.userForm.status === 'VALID') {
-      this.authService.login(email, password).subscribe(({ accessToken }) => {
-        this.storageService.saveUser(accessToken);
+      this.authService.login(email, password).subscribe(({ accessToken, userId }) => {
+        this.storageService.saveUser(accessToken, userId);
         this.reloadPage();
       });
     }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { AppSettings } from '../app.settings';
 
 const API_URL = AppSettings.API_ENDPOINT;
@@ -11,19 +10,19 @@ const API_URL = AppSettings.API_ENDPOINT;
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  getPublicContent(): Observable<any> {
+  getPublicContent() {
     return this.http.get(API_URL + 'all', { responseType: 'text' });
   }
 
-  getUserBoard(): Observable<any> {
+  getUserBoard() {
     return this.http.get(API_URL + 'user', { responseType: 'text' });
   }
-  
-  getModeratorBoard(): Observable<any> {
+
+  getModeratorBoard() {
     return this.http.get(API_URL + 'mod', { responseType: 'text' });
   }
 
-  getAdminBoard(): Observable<any> {
+  getAdminBoard() {
     return this.http.get(API_URL + 'admin', { responseType: 'text' });
   }
 }
