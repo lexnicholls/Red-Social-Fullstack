@@ -8,14 +8,17 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { CreatePostDTO, EditPostDTO, FetchPostDTO } from './post.dto';
 import { PostService } from './post.service';
+import { UserGuard } from '../user/user.guard';
 
 @Controller('post')
 export class PostController {
   constructor(private postService: PostService) {}
 
+  @UseGuards(UserGuard)
   @Post()
   async createPost(@Res() res, @Body() createPostData: CreatePostDTO) {
     return res
@@ -23,6 +26,7 @@ export class PostController {
       .json(await this.postService.createPost(createPostData));
   }
 
+  @UseGuards(UserGuard)
   @Put()
   async editPost(
     @Res() res,
@@ -34,12 +38,14 @@ export class PostController {
       .json(await this.postService.editPost(postId, editPostData));
   }
 
+  @UseGuards(UserGuard)
   @Delete()
   async deletePost(@Res() res, @Query('postId') postId: string) {
     await this.postService.deletePost(postId);
     return res.status(HttpStatus.OK).json();
   }
 
+  @UseGuards(UserGuard)
   @Get()
   async getPost(@Res() res, @Query() fetchPostDTO: FetchPostDTO) {
     return res
