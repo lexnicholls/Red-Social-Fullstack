@@ -1,6 +1,9 @@
 module.exports = {
   purge: ["./**/*.{html,vue}"],
   darkMode: "class", // or 'media' or 'class'
+  content: [
+    "./node_modules/flowbite/**/*.js", // add this line
+  ],
   theme: {
     screens: {
       xs: "614px",
@@ -40,5 +43,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
 };

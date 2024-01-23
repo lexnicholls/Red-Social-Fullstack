@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppSettings } from '../app.settings';
+import { Observable } from 'rxjs';
+import { Post } from '../interfaces/post.interface';
 
 const AUTH_API = AppSettings.API_ENDPOINT;
 const httpOptions = {
@@ -20,23 +22,20 @@ export class PostService {
     return this.http.post(
       AUTH_API + '/post',
       {
-        userId,
+        user: userId,
         title,
         content,
       },
       httpOptions
-    );
+    ) as Observable<Post>;
   }
 
-  editPost(title: string, content: string) {
+  editPost(postId: string, title: string, content: string) {
     return this.http.put(
-      AUTH_API + '/post',
-      {
-        title,
-        content,
-      },
+      AUTH_API + '/post?postId=' + postId,
+      { title, content },
       httpOptions
-    );
+    ) as Observable<Post>;
   }
 
   deletePost(postId: string) {
@@ -47,7 +46,7 @@ export class PostService {
     return this.http.get(
       AUTH_API + '/post?title=' + title,
       httpOptions
-    );
+    ) as Observable<Post[]>;
   }
 
   likePost(postId: string, checked: boolean) {
@@ -57,6 +56,6 @@ export class PostService {
         checked,
       },
       httpOptions
-    );
+    ) as Observable<{ postId: string; likes: number }>;
   }
 }

@@ -12,11 +12,15 @@ export class StorageService {
     window.sessionStorage.clear();
   }
 
-  public saveUser(accessToken: string, userId: string): void {
+  public saveUser(accessToken: string, userId: string, fullName: string, email: string): void {
     window.sessionStorage.removeItem(USER_KEY);
     window.sessionStorage.removeItem('userId');
+    window.sessionStorage.removeItem('fullName');
+    window.sessionStorage.removeItem('email');
     window.sessionStorage.setItem(USER_KEY, accessToken);
     window.sessionStorage.setItem('userId', userId);
+    window.sessionStorage.setItem('fullName', fullName);
+    window.sessionStorage.setItem('email', email);
   }
 
   public getUser(): any {

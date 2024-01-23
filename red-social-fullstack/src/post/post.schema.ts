@@ -19,7 +19,7 @@ export class Post {
   @Prop()
   deletedAt: Date;
   @Prop({ type: mongooseSchema.Types.ObjectId, ref: 'User' })
-  userId: User;
+  user: User;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

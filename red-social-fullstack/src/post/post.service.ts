@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreatePostDTO, EditPostDTO, FetchPostDTO } from './post.dto';
@@ -13,19 +18,21 @@ export class PostService {
   async createPost(createPostDTO: CreatePostDTO): Promise<Post> {
     try {
       const createdPost = new this.postModel(createPostDTO);
-      return createdPost.save();
+      const userCreated = await createdPost.save();
+      return await userCreated.populate('user');
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async editPost(postId: string, editPostDTO: EditPostDTO): Promise<Post> {
-    const postToUpdate = await this.postModel.findByIdAndUpdate(
-      postId,
-      editPostDTO,
-      { new: true },
-    );
-    return postToUpdate;
+  async editPost(postId: string, editPostDTO: EditPostDTO) {
+    const postToUpdate = await this.postModel.findById(postId);
+
+    if (!postToUpdate) throw new NotFoundException();
+
+    await postToUpdate.updateOne(editPostDTO);
+
+    return postToUpdate.populate('user');
   }
 
   async deletePost(postId: string): Promise<void> {
@@ -37,16 +44,22 @@ export class PostService {
   }
 
   async findAllPosts(fetchPostDTO: FetchPostDTO) {
-    return this.postModel.find({
-      title: { $regex: fetchPostDTO.title ?? '', $options: 'i' },
-      deletedAt: undefined,
-    });
+    return this.postModel
+      .find({
+        title: { $regex: fetchPostDTO.title ?? '', $options: 'i' },
+        deletedAt: undefined,
+      })
+      .populate('user')
+      .sort({ createdAt: -1 });
   }
 
-  async likePost(postId: string, checked: boolean): Promise<Post> {
+  async likePost(postId: string, checked: boolean) {
     const postToLike = await this.postModel.findById(postId);
-    return await postToLike.updateOne({
+    const resPost = {
+      postId,
       likes: checked ? postToLike.likes + 1 : postToLike.likes - 1,
-    });
+    };
+    await postToLike.updateOne(resPost);
+    return resPost;
   }
 }

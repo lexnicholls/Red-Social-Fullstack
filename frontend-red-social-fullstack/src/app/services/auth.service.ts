@@ -22,7 +22,7 @@ export class AuthService {
         password,
       },
       httpOptions
-    ) as Observable<{ accessToken: string , userId: string}>;
+    ) as Observable<{ accessToken: string , userId: string, fullName: string}>;
   }
 
   register(fullName: string, age: number, email: string, password: string) {

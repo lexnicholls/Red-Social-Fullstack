@@ -6,9 +6,9 @@
         class="flex flex-col h-screen xl:pr-3 fixed overflow-y-auto w-68 xs:w-88 xl:w-275"
       >
         <!-- Nav -->
-        <nav class="mt-5">
+        <nav class="mt-5" style="display: flex; flex-direction: column">
           <a
-            href="#"
+            href="/landingpage"
             class="flex items-center justify-center xl:justify-start text-blue-400 mb-8 transition duration-350 ease-in-out"
           >
             <svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6">
@@ -64,9 +64,9 @@
           <div class="flex flex-row items-center justify-between">
             <div class="hidden xl:block flex flex-col ml-2">
               <h1 class="text-gray-800 dark:text-white font-bold text-sm">
-                Joe Biden
+                {{ fullName }}
               </h1>
-              <p class="text-gray-400 text-sm">Correo&#64;correo.com</p>
+              <p class="text-gray-400 text-sm">{{ email }}</p>
             </div>
             <div class="pl-8">
               <svg
@@ -152,6 +152,7 @@
         class="border-b border-gray-200 dark:border-dim-200 pb-4 border-l border-r"
         [formGroup]="postForm"
         (submit)="onCreatePost()"
+        type="submit"
       >
         <div class="flex flex-shrink-0 p-4 pb-0">
           <div class="w-full p-2">
@@ -171,7 +172,8 @@
           <button
             type="submit"
             (click)="onCreatePost()"
-            class="bg-blue-400 hover:bg-blue-500 text-white rounded-full py-1 px-4 ml-auto mr-1"
+            [disabled]="!buttonPostEnable"
+            class="bg-blue-400 hover:bg-blue-500 text-white rounded-full py-1 px-4 ml-auto mr-1 disable:bg-neutral-600"
           >
             <span class="font-bold text-sm">Post!</span>
           </button>
@@ -185,47 +187,44 @@
       <!-- Tweet -->
       <div
         class="border-b border-gray-200 dark:border-dim-200 hover:bg-gray-100 dark:hover:bg-dim-300 cursor-pointer transition duration-350 ease-in-out pb-4 border-l border-r"
+        *ngFor="let singlePost of postList"
       >
+        <!-- Tweet Header-->
         <div class="flex flex-shrink-0 p-4 pb-0">
-          <a href="#" class="flex-shrink-0 group block">
+          <a class="flex-shrink-0 group block">
             <div class="flex items-top">
               <div class="ml-3 pl-9 mb-5">
                 <p
                   class="flex items-center text-base leading-6 font-medium text-gray-800 dark:text-white"
                 >
-                  Joe Biden
+                  {{ singlePost.user.fullName }}
                   <span
                     class="ml-10 text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150"
                   >
-                    Title
+                    {{ singlePost.title }}
                   </span>
                 </p>
               </div>
             </div>
           </a>
         </div>
+        <!-- Tweet Header-->
+
+        <!-- Tweet Content-->
         <div class="px-16 text-pretty">
           <p
             class="text-base width-auto font-medium text-gray-800 dark:text-white flex-shrink"
           >
-            America, I’m honored that you have chosen me to lead our great
-            country.<br />
-            <br />
-            The work ahead of us will be hard, but I promise you this: I will be
-            a
-            <a href="#" class="text-blue-400 hover:underline">#President</a>
-            for all Americans — whether you voted for me or not.<br />
-            <br />
-            I will keep the faith that you have placed in me.
+            {{ singlePost.content }}
           </p>
 
           <div class="flex mt-5">
             <div class="w-full">
-              <div class="flex items-center">
+              <div class="flex items-center justify-between gap-5">
                 <button
-                  (click)="likePost()"
+                  (click)="likePost(singlePost._id)"
                   type="button"
-                  class="flex-1 flex items-center text-gray-800 dark:text-white text-xs text-gray-400 hover:text-red-600 dark:hover:text-red-600 transition duration-350 ease-in-out"
+                  class="flex items-center w-min dark:text-white text-xs text-gray-400 hover:text-red-600 dark:hover:text-red-600 transition duration-350 ease-in-out"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -238,18 +237,160 @@
                       ></path>
                     </g>
                   </svg>
-                  14 k
+                  <span> {{ singlePost.likes }}</span>
                 </button>
 
-                <div
-                  class="flex-1 flex items-center text-gray-800 dark:text-white text-xs text-gray-400 transition duration-350 ease-in-out"
+                <button
+                  (click)="deletePost(singlePost._id)"
+                  type="button"
+                  title="Delete"
+                  *ngIf="userId == singlePost.user._id"
+                  class="flex items-center dark:text-white text-xs text-gray-400 transition duration-350 ease-in-out"
                 >
-                  Nov 7
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="icon icon-tabler icon-tabler-trash"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M4 7l16 0" />
+                    <path d="M10 11l0 6" />
+                    <path d="M14 11l0 6" />
+                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                  </svg>
+                </button>
+
+                <!-- Edit Tweet -->
+                <button
+                  type="button"
+                  title="Edit"
+                  *ngIf="userId == singlePost.user._id"
+                  class="flex items-center dark:text-white text-xs text-gray-400 transition duration-350 ease-in-out"
+                  data-modal-target="authentication-modal"
+                  data-modal-toggle="authentication-modal"
+                  (click)="initEditForm(singlePost)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="icon icon-tabler icon-tabler-pencil"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"
+                    />
+                    <path d="M13.5 6.5l4 4" />
+                  </svg>
+                </button>
+                <!-- Main modal -->
+                <div
+                  *ngIf="userId == singlePost.user._id"
+                  id="authentication-modal"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                >
+                  <div class="relative p-4 w-full max-w-md max-h-full">
+                    <!-- Modal content -->
+                    <div
+                      class="relative bg-white rounded-lg shadow dark:bg-gray-700"
+                    >
+                      <!-- Modal header -->
+                      <div
+                        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+                      >
+                        <h3
+                          class="text-xl font-semibold text-gray-900 dark:text-white"
+                        >
+                          Edit your post
+                        </h3>
+                        <button
+                          type="button"
+                          class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                          data-modal-hide="authentication-modal"
+                        >
+                          <svg
+                            class="w-3 h-3"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 14 14"
+                          >
+                            <path
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                            />
+                          </svg>
+                          <span class="sr-only">Close modal</span>
+                        </button>
+                      </div>
+                      <!-- Modal body -->
+                      <div class="p-4 md:p-5">
+                        <form
+                          class="space-y-4"
+                          [formGroup]="editPostForm"
+                          (submit)="editPost()"
+                        >
+                          <div>
+                            <input
+                              type="text"
+                              name="postEditTitle"
+                              id="postEditTitle"
+                              formControlName="title"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            />
+                          </div>
+                          <div>
+                            <input
+                              type="text"
+                              name="postEditContent"
+                              id="postEditContent"
+                              formControlName="content"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            />
+                          </div>
+                          <button
+                            type="submit"
+                            data-modal-hide="authentication-modal"
+                            class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                          >
+                            Update!
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Edit Tweet -->
+                <div
+                  class="flex items-center dark:text-white text-xs text-gray-400 transition duration-350 ease-in-out"
+                >
+                  {{ singlePost.createdAt | date : "fullDate" }}
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <!-- Tweet Content-->
       </div>
       <!-- /Tweet -->
 
@@ -317,7 +458,7 @@
           </div>
           <input
             class="w-full bg-gray-200 dark:bg-dim-400 border-gray-200 dark:border-dim-400 text-gray-100 focus:bg-gray-100 dark:focus:bg-dim-900 focus:outline-none focus:border focus:border-blue-200 font-normal h-9 flex items-center pl-12 text-sm rounded-full border shadow"
-            placeholder="Search..."
+            placeholder="Search by post title..."
             formControlName="title"
           />
         </form>

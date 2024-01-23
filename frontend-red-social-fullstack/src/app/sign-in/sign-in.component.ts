@@ -31,8 +31,8 @@ export class SignInComponent {
   onSignInUser() {
     const { email, password } = this.userForm.value;
     if (this.userForm.status === 'VALID') {
-      this.authService.login(email, password).subscribe(({ accessToken, userId }) => {
-        this.storageService.saveUser(accessToken, userId);
+      this.authService.login(email, password).subscribe(({ accessToken, userId , fullName}) => {
+        this.storageService.saveUser(accessToken, userId, fullName, email);
         this.reloadPage();
       });
     }

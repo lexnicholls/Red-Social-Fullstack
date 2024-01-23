@@ -25,6 +25,8 @@ export class UserService {
     return {
       accessToken: await this.jwtService.signAsync(payload),
       userId: user.id,
+      fullName: user.fullName,
+      email: user.email
     };
   }
 }
