@@ -31,10 +31,12 @@ export class SignInComponent {
   onSignInUser() {
     const { email, password } = this.userForm.value;
     if (this.userForm.status === 'VALID') {
-      this.authService.login(email, password).subscribe(({ accessToken, userId , fullName}) => {
-        this.storageService.saveUser(accessToken, userId, fullName, email);
-        this.reloadPage();
-      });
+      this.authService
+        .login(email, password)
+        .subscribe(({ accessToken, user }) => {
+          this.storageService.saveUser(accessToken, user);
+          this.reloadPage();
+        });
     }
   }
 

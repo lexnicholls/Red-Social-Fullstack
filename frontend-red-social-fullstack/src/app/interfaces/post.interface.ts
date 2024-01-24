@@ -8,3 +8,7 @@ export interface Post {
   user: User;
   createdAt: Date;
 }
+export class PostPagination {
+  title?: string;
+}
+

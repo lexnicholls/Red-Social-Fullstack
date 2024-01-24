@@ -12,12 +12,13 @@ import {
 } from '@nestjs/common';
 import { CreatePostDTO, EditPostDTO, FetchPostDTO } from './post.dto';
 import { PostService } from './post.service';
-import { UserGuard } from '../user/user.guard';
-
+import { Pagination } from 'src/model/pagination.model';
+import { ApiTags } from '@nestjs/swagger';
+import { UserGuard } from 'src/user/user.guard';
+@ApiTags('post')
 @Controller('post')
 export class PostController {
   constructor(private postService: PostService) {}
-
   @UseGuards(UserGuard)
   @Post()
   async createPost(@Res() res, @Body() createPostData: CreatePostDTO) {
@@ -63,5 +64,10 @@ export class PostController {
     return res
       .status(HttpStatus.OK)
       .json(await this.postService.likePost(postId, checked));
+  }
+  @UseGuards(UserGuard)
+  @Post('/findAll')
+  async findAll(@Body() pagination: Pagination<FetchPostDTO>) {
+    return this.postService.findAll(pagination);
   }
 }

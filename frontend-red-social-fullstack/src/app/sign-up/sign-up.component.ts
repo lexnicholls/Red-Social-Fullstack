@@ -30,15 +30,18 @@ export class SignUpComponent {
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
+  buttonCreateEnable = true;
 
   constructor(private authService: AuthService) {}
 
   onSubmit(): void {
     const { fullName, age, email, password } = this.userForm.value;
     if (this.userForm.status === 'VALID') {
+      this.buttonCreateEnable = false;
       this.authService
         .register(fullName, age, email, password)
         .subscribe(() => {
+          this.buttonCreateEnable = true;
           this.reloadPage();
         });
     }

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
+import { User } from '../interfaces/user.interface';
 
 const USER_KEY = 'auth-user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StorageService {
   constructor() {}
@@ -12,15 +13,12 @@ export class StorageService {
     window.sessionStorage.clear();
   }
 
-  public saveUser(accessToken: string, userId: string, fullName: string, email: string): void {
+  public saveUser(accessToken: string, user: User): void {
     window.sessionStorage.removeItem(USER_KEY);
     window.sessionStorage.removeItem('userId');
-    window.sessionStorage.removeItem('fullName');
-    window.sessionStorage.removeItem('email');
     window.sessionStorage.setItem(USER_KEY, accessToken);
-    window.sessionStorage.setItem('userId', userId);
-    window.sessionStorage.setItem('fullName', fullName);
-    window.sessionStorage.setItem('email', email);
+    window.sessionStorage.setItem('userId', user._id);
+    window.sessionStorage.setItem('user', JSON.stringify(user));
   }
 
   public getUser(): any {

@@ -1,13 +1,26 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
-import { CreateUserDTO, LoginUserDTO } from './user.dto';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  Put,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { UserDTO } from './user.dto';
 import { UserService } from './user.service';
+import { UserGuard } from './user.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Post('/register')
-  async createUser(@Res() res, @Body() createUserData: CreateUserDTO) {
+  async createUser(@Res() res, @Body() createUserData: UserDTO) {
     try {
       return res
         .status(HttpStatus.CREATED)
@@ -21,13 +34,32 @@ export class UserController {
   }
 
   @Post('/auth')
-  async login(@Res() res, @Body() loginUserData: LoginUserDTO) {
+  async login(@Res() res, @Body() loginUserData: UserDTO) {
     const user = await this.userService.loginUser(loginUserData);
     if (!user) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'USER NOT FOUND',
       });
     }
+    return res.status(HttpStatus.OK).json(user);
+  }
+
+  @UseGuards(UserGuard)
+  @Put()
+  async editUser(
+    @Res() res,
+    @Body() editUserData: UserDTO,
+    @Query('userId') userId: string,
+  ) {
+    return res
+      .status(HttpStatus.OK)
+      .json(await this.userService.editUser(userId, editUserData));
+  }
+
+  @UseGuards(UserGuard)
+  @Get()
+  async getUser(@Res() res, @Query('id') userId: string) {
+    const user = await this.userService.fetchUser(userId);
     return res.status(HttpStatus.OK).json(user);
   }
 }

@@ -1,12 +1,12 @@
-export interface CreateUserDTO {
-  fullName: string;
-  age: number;
-  email: string;
-  password: string;
-}
+import { ApiProperty } from '@nestjs/swagger';
 
-export interface LoginUserDTO {
+export class UserDTO {
+  @ApiProperty()
   fullName: string;
+  @ApiProperty()
+  age: number;
+  @ApiProperty()
   email: string;
+  @ApiProperty()
   password: string;
 }

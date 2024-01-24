@@ -1,0 +1,116 @@
+<!-- Left -->
+<div class="w-68 xs:w-88 xl:w-275 h-screen">
+  <div
+    class="flex flex-col h-screen xl:pr-3 fixed overflow-y-auto w-68 xs:w-88 xl:w-275"
+  >
+    <!-- Nav -->
+    <nav class="my-10 flex flex-col">
+      <a
+        href="/landingpage"
+        class="flex items-center justify-center xl:justify-start text-blue-400 mb-8 transition duration-350 ease-in-out"
+      >
+        <svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M22.58 7.35L12.475 1.897c-.297-.16-.654-.16-.95 0L1.425 7.35c-.486.264-.667.87-.405 1.356.18.335.525.525.88.525.16 0 .324-.038.475-.12l.734-.396 1.59 11.25c.216 1.214 1.31 2.062 2.66 2.062h9.282c1.35 0 2.444-.848 2.662-2.088l1.588-11.225.737.398c.485.263 1.092.082 1.354-.404.263-.486.08-1.093-.404-1.355zM12 15.435c-1.795 0-3.25-1.455-3.25-3.25s1.455-3.25 3.25-3.25 3.25 1.455 3.25 3.25-1.455 3.25-3.25 3.25z"
+          ></path>
+        </svg>
+        <span class="hidden xl:block ml-4 font-bold text-md">Home</span>
+      </a>
+
+      <a
+        href="/profile"
+        class="flex items-center justify-center xl:justify-start text-gray-800 dark:text-white hover:text-blue-400 dark:hover:text-blue-400 mb-8 transition duration-350 ease-in-out"
+      >
+        <svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 11.816c1.355 0 2.872-.15 3.84-1.256.814-.93 1.078-2.368.806-4.392-.38-2.825-2.117-4.512-4.646-4.512S7.734 3.343 7.354 6.17c-.272 2.022-.008 3.46.806 4.39.968 1.107 2.485 1.256 3.84 1.256zM8.84 6.368c.162-1.2.787-3.212 3.16-3.212s2.998 2.013 3.16 3.212c.207 1.55.057 2.627-.45 3.205-.455.52-1.266.743-2.71.743s-2.255-.223-2.71-.743c-.507-.578-.657-1.656-.45-3.205zm11.44 12.868c-.877-3.526-4.282-5.99-8.28-5.99s-7.403 2.464-8.28 5.99c-.172.692-.028 1.4.395 1.94.408.52 1.04.82 1.733.82h12.304c.693 0 1.325-.3 1.733-.82.424-.54.567-1.247.394-1.94zm-1.576 1.016c-.126.16-.316.246-.552.246H5.848c-.235 0-.426-.085-.552-.246-.137-.174-.18-.412-.12-.654.71-2.855 3.517-4.85 6.824-4.85s6.114 1.994 6.824 4.85c.06.242.017.48-.12.654z"
+          ></path>
+        </svg>
+        <span class="hidden xl:block ml-4 font-bold text-md">Profile</span>
+      </a>
+
+      <button
+        (click)="this.signOut()"
+        class="flex items-center justify-center xl:justify-start text-gray-800 dark:text-white hover:text-blue-400 dark:hover:text-blue-400 mb-8 transition duration-350 ease-in-out"
+      >
+        <svg fill="currentColor" viewBox="0 0 24 24" class="h-6 w-6">
+          <g>
+            <path
+              d="M16.5 10.25c-.965 0-1.75.787-1.75 1.75s.784 1.75 1.75 1.75c.964 0 1.75-.786 1.75-1.75s-.786-1.75-1.75-1.75zm0 2.5c-.414 0-.75-.336-.75-.75 0-.413.337-.75.75-.75s.75.336.75.75c0 .413-.336.75-.75.75zm-4.5-2.5c-.966 0-1.75.787-1.75 1.75s.785 1.75 1.75 1.75 1.75-.786 1.75-1.75-.784-1.75-1.75-1.75zm0 2.5c-.414 0-.75-.336-.75-.75 0-.413.337-.75.75-.75s.75.336.75.75c0 .413-.336.75-.75.75zm-4.5-2.5c-.965 0-1.75.787-1.75 1.75s.785 1.75 1.75 1.75c.964 0 1.75-.786 1.75-1.75s-.787-1.75-1.75-1.75zm0 2.5c-.414 0-.75-.336-.75-.75 0-.413.337-.75.75-.75s.75.336.75.75c0 .413-.336.75-.75.75z"
+            ></path>
+            <path
+              d="M12 22.75C6.072 22.75 1.25 17.928 1.25 12S6.072 1.25 12 1.25 22.75 6.072 22.75 12 17.928 22.75 12 22.75zm0-20C6.9 2.75 2.75 6.9 2.75 12S6.9 21.25 12 21.25s9.25-4.15 9.25-9.25S17.1 2.75 12 2.75z"
+            ></path>
+          </g>
+        </svg>
+        <span class="hidden xl:block ml-4 font-bold text-md">Sign out</span>
+      </button>
+    </nav>
+    <!-- /Nav -->
+
+    <!-- User Menu -->
+    <button
+      class="w-14 xl:w-full mx-auto mt-auto flex flex-row items-center px-10 justify-between rounded-full xl:rounded-xl hover:bg-blue-50 dark:hover:bg-dim-800 p-2 cursor-pointer transition duration-350 ease-in-out mb-2"
+      (click)="this.toggleDark()"
+    >
+      <div class="hidden xl:flex xl:flex-col">
+        <h1 class="text-gray-800 dark:text-white font-bold text-sm text-balance">
+          {{ user.fullName }}
+        </h1>
+        <p class="text-gray-400 text-sm">{{ user.email }}</p>
+      </div>
+      <div class="">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="block dark:hidden dark:text-white"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+          <path
+            d="M14.828 14.828a4 4 0 1 0 -5.656 -5.656a4 4 0 0 0 5.656 5.656z"
+          ></path>
+          <path d="M6.343 17.657l-1.414 1.414"></path>
+          <path d="M6.343 6.343l-1.414 -1.414"></path>
+          <path d="M17.657 6.343l1.414 -1.414"></path>
+          <path d="M17.657 17.657l1.414 1.414"></path>
+          <path d="M4 12h-2"></path>
+          <path d="M12 4v-2"></path>
+          <path d="M20 12h2"></path>
+          <path d="M12 20v2"></path>
+        </svg>
+        <svg
+          class="hidden dark:block dark:text-white"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+          <path
+            d="M12 1.992a10 10 0 1 0 9.236 13.838c.341 -.82 -.476 -1.644 -1.298 -1.31a6.5 6.5 0 0 1 -6.864 -10.787l.077 -.08c.551 -.63 .113 -1.653 -.758 -1.653h-.266l-.068 -.006l-.06 -.002z"
+            stroke-width="0"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </div>
+    </button>
+    <!-- /User Menu -->
+  </div>
+</div>
+<!-- /Left -->

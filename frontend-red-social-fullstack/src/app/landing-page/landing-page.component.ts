@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { PostService } from '../services/post.service';
 import {
   FormControl,
@@ -9,7 +9,9 @@ import {
 } from '@angular/forms';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
-import { Post } from '../interfaces/post.interface';
+import { Post, PostPagination } from '../interfaces/post.interface';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { Pagination } from '../interfaces/pagination';
 
 const USER_KEY = 'auth-user';
 registerLocaleData(localeEs, 'es');
@@ -17,9 +19,9 @@ registerLocaleData(localeEs, 'es');
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.css',
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, SidebarComponent],
 })
 export class LandingPageComponent {
   postForm: FormGroup = new FormGroup({
@@ -28,7 +30,7 @@ export class LandingPageComponent {
   });
 
   searchForm: FormGroup = new FormGroup({
-    title: new FormControl('', [Validators.required]),
+    title: new FormControl(''),
   });
 
   editPostForm = new FormGroup({
@@ -42,9 +44,62 @@ export class LandingPageComponent {
   fullName = window.sessionStorage.getItem('fullName') as string;
   email = window.sessionStorage.getItem('email') as string;
   buttonPostEnable = true;
+  chagePage = false;
+  searchInputValue = '';
+  timerId?: boolean = false;
+  pagination: Pagination<PostPagination> = {
+    page: 0,
+    limit: 10,
+    data: { title: '' },
+  };
 
   constructor(private postService: PostService) {
     this.fetchAllPosts();
+  }
+  @HostListener('window:scroll', ['$event']) // for window scroll events
+  onScroll(event: Event) {
+    const windowHeight =
+      'innerHeight' in window
+        ? window.innerHeight
+        : document.documentElement.offsetHeight;
+    const body = document.body;
+    const html = document.documentElement;
+    const docHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+
+    const windowBottom = windowHeight + window.pageYOffset;
+
+    if (windowBottom >= docHeight) {
+      console.log(this.postList.length / 10);
+
+      if ((this.postList.length / 10) % 1 === 0) {
+        this.pagination.page = this.pagination.page + 1;
+        this.chagePage = true;
+      } else {
+        this.chagePage = false;
+      }
+
+      this.postService.getAllPostPaginated(this.pagination).subscribe((res) => {
+        if (!this.chagePage) {
+          // Obtener los IDs de los elementos en res (suponiendo que res es un array de objetos con una propiedad 'id')
+          const resIds = (res as Post[]).map((post) => post._id);
+
+          // Filtrar this.postList para eliminar los elementos que tienen el mismo ID que los elementos en res
+          this.postList = this.postList.filter(
+            (post) => !resIds.includes(post._id)
+          );
+        }
+        this.postList = [...this.postList, ...(res as Post[])];
+        if ((res as Post[]).length == 0) {
+          this.pagination.page = this.pagination.page - 1;
+        }
+      });
+    }
   }
 
   onCreatePost() {
@@ -55,25 +110,25 @@ export class LandingPageComponent {
         .createPost(this.userId, title, content)
         .subscribe((postCreated) => {
           this.buttonPostEnable = true;
-          this.postList = [postCreated, ...this.postList];
+
+          this.pagination.page = 0;
+          this.fetchAllPosts();
           this.postForm.setValue({ title: '', content: '' });
         });
     }
   }
 
   fetchAllPosts() {
-    this.postService.getAllPost('').subscribe((res) => {
+    this.postService.getAllPostPaginated(this.pagination).subscribe((res) => {
       this.postList = res as Post[];
     });
   }
 
   fetchPostByTitle() {
-    const { title } = this.searchForm.value;
-    if (this.searchForm.status === 'VALID') {
-      this.postService.getAllPost(title).subscribe((res) => {
-        this.postList = res as Post[];
-      });
-    }
+    this.pagination.page = 0;
+    this.postService.getAllPostPaginated(this.pagination).subscribe((res) => {
+      this.postList = res as Post[];
+    });
   }
 
   likePost(postId: string) {
@@ -102,7 +157,6 @@ export class LandingPageComponent {
   }
 
   initEditForm(post: Post) {
-    console.log(post);
     this.editPostForm.setValue({
       id: post._id,
       title: post.title,

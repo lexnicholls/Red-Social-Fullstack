@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppSettings } from '../app.settings';
 import { Observable } from 'rxjs';
+import { User } from '../interfaces/user.interface';
 
 const AUTH_API = AppSettings.API_ENDPOINT;
 const httpOptions = {
@@ -22,7 +23,7 @@ export class AuthService {
         password,
       },
       httpOptions
-    ) as Observable<{ accessToken: string , userId: string, fullName: string}>;
+    ) as Observable<{ accessToken: string; user: User }>;
   }
 
   register(fullName: string, age: number, email: string, password: string) {

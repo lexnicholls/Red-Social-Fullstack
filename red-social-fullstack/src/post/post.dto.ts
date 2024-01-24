@@ -1,23 +1,40 @@
 import { User } from 'src/user/user.schema';
+import { ApiProperty } from '@nestjs/swagger';
 
-export interface CreatePostDTO {
+export class CreatePostDTO {
+  @ApiProperty()
   title: string;
+  @ApiProperty()
   content: string;
+  @ApiProperty()
   likes: number;
+  @ApiProperty()
   userId: User;
 }
 
-export interface EditPostDTO {
+export class EditPostDTO {
+  @ApiProperty()
   title: string;
+  @ApiProperty()
   content: string;
+  @ApiProperty()
   likes: number;
+  @ApiProperty()
   userId: User;
 }
 
-export interface DeletePostDTO {
+export class DeletePostDTO {
+  @ApiProperty()
   postId: string;
 }
 
-export interface FetchPostDTO {
+export class FetchPostDTO {
+  @ApiProperty()
   title: string;
+  @ApiProperty()
+  content: string;
+  @ApiProperty()
+  likes: number;
+  @ApiProperty()
+  userId: User;
 }

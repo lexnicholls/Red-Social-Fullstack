@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppSettings } from '../app.settings';
 import { Observable } from 'rxjs';
-import { Post } from '../interfaces/post.interface';
+import { Post, PostPagination } from '../interfaces/post.interface';
+import { Pagination } from '../interfaces/pagination';
 
 const AUTH_API = AppSettings.API_ENDPOINT;
 const httpOptions = {
@@ -45,6 +46,13 @@ export class PostService {
   getAllPost(title: string) {
     return this.http.get(
       AUTH_API + '/post?title=' + title,
+      httpOptions
+    ) as Observable<Post[]>;
+  }
+  getAllPostPaginated(pagination: Pagination<PostPagination>) {
+    return this.http.post(
+      AUTH_API + '/post/findAll',
+      pagination,
       httpOptions
     ) as Observable<Post[]>;
   }

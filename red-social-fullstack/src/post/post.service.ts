@@ -8,13 +8,23 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreatePostDTO, EditPostDTO, FetchPostDTO } from './post.dto';
 import { Post } from './post.schema';
+import { Pagination } from 'src/model/pagination.model';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectModel(Post.name) private readonly postModel: Model<Post>,
   ) {}
-
+  async findAll(pagination: Pagination<FetchPostDTO>): Promise<Post[]> {
+    return await this.postModel
+      .find(
+        { title: { $regex: pagination.data.title ?? '', $options: 'i' } },
+        {},
+        { limit: pagination.limit, skip: pagination.page * pagination.limit },
+      )
+      .populate('user')
+      .sort({ createdAt: -1 });
+  }
   async createPost(createPostDTO: CreatePostDTO): Promise<Post> {
     try {
       const createdPost = new this.postModel(createPostDTO);

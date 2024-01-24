@@ -9,7 +9,7 @@ export class User {
   fullName: string;
   @Prop({ required: true })
   age: number;
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   email: string;
   @Prop({ required: true })
   password: string;

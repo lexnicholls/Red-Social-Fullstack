@@ -1,8 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppSettings } from '../app.settings';
+import { Observable } from 'rxjs';
+import { User } from '../interfaces/user.interface';
 
 const API_URL = AppSettings.API_ENDPOINT;
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer ' + window.sessionStorage.getItem('auth-user'),
+  }),
+};
 
 @Injectable({
   providedIn: 'root',
@@ -10,19 +18,18 @@ const API_URL = AppSettings.API_ENDPOINT;
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  getPublicContent() {
-    return this.http.get(API_URL + 'all', { responseType: 'text' });
+  fetchUser(userId: string): Observable<User> {
+    return this.http.get(
+      `${API_URL}/users?id=${userId}`,
+      httpOptions
+    ) as Observable<User>;
   }
 
-  getUserBoard() {
-    return this.http.get(API_URL + 'user', { responseType: 'text' });
-  }
-
-  getModeratorBoard() {
-    return this.http.get(API_URL + 'mod', { responseType: 'text' });
-  }
-
-  getAdminBoard() {
-    return this.http.get(API_URL + 'admin', { responseType: 'text' });
+  editUser(userid: string, fullName: string, email: string, age: number) {
+    return this.http.put(
+      API_URL + '/users?userId=' + userid,
+      { fullName, email, age },
+      httpOptions
+    ) as Observable<User>;
   }
 }
