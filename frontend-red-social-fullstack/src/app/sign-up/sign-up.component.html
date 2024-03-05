@@ -1,0 +1,117 @@
+<div class="container flex flex-col mx-auto bg-white rounded-lg pt-12 my-5">
+  <div
+    class="flex justify-center w-full h-full my-auto xl:gap-14 lg:justify-normal md:gap-5 draggable"
+  >
+    <div class="flex items-center justify-center w-full lg:p-12">
+      <div class="flex items-center xl:p-10">
+        <form
+          class="flex flex-col w-full h-full pb-6 text-center bg-white rounded-3xl"
+          [formGroup]="userForm"
+          (submit)="onSubmit()"
+        >
+          <h3 class="mb-3 text-4xl font-extrabold text-dark-grey-900">
+            Sign Up
+          </h3>
+          <p class="mb-4 text-grey-700">Enter your email and password</p>
+
+          <!-- FullName -->
+          <div class="form-group">
+            @if(userForm.controls['fullName'].errors){
+            <label for="fullName" class="mb-2 text-sm text-start text-grey-900"
+              >Full Name*
+              <span class="text-red-500 font-light"
+                >This is required</span
+              ></label
+            >
+            }
+            <input
+              id="fullName"
+              type="text"
+              placeholder="Enter your name"
+              class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-grey-400 mb-7 placeholder:text-grey-700 bg-grey-200 text-dark-grey-900 rounded-2xl"
+              formControlName="fullName"
+            />
+          </div>
+          <!-- FullName -->
+
+          <!-- Age -->
+          <div class="form-group">
+            <label for="age" class="mb-2 text-sm text-start text-grey-900"
+              >Age* @if(userForm.controls['age'].errors){
+              <span class="text-red-500 font-light">This is required</span>
+              }
+            </label>
+            <input
+              id="age"
+              type="text"
+              placeholder="Enter your age"
+              class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-grey-400 mb-7 placeholder:text-grey-700 bg-grey-200 text-dark-grey-900 rounded-2xl"
+              formControlName="age"
+            />
+          </div>
+          <!-- Age -->
+
+          <!-- Email -->
+          <div class="form-group">
+            @if(userForm.controls['email'].errors){
+            <label for="email" class="mb-2 text-sm text-start text-grey-900"
+              >Email*
+              <span class="text-red-500 font-light"
+                >This is required</span
+              ></label
+            >
+            }
+            <input
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-grey-400 mb-7 placeholder:text-grey-700 bg-grey-200 text-dark-grey-900 rounded-2xl"
+              formControlName="email"
+            />
+          </div>
+          <!-- Email -->
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password" class="mb-2 text-sm text-start text-grey-900"
+              >Password* @if(userForm.controls['password'].errors){
+              <span class="text-red-500 font-light">This is required</span>
+              }</label
+            >
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              class="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-grey-400 mb-7 placeholder:text-grey-700 bg-grey-200 text-dark-grey-900 rounded-2xl"
+              formControlName="password"
+            />
+          </div>
+          <!-- Password -->
+
+          <button
+            class="bg-blue-400 hover:scale-105 hover:bg-blue-500 text-white rounded-full"
+            (click)="onSubmit()"
+            [disabled]="!buttonCreateEnable"
+            type="submit"
+          >
+            Sign Up
+          </button>
+
+          <div class="flex items-center mb-3">
+            <hr class="h-0 border-b border-solid border-grey-500 grow" />
+            <p class="mx-4 text-grey-600">or</p>
+            <hr class="h-0 border-b border-solid border-grey-500 grow" />
+          </div>
+
+          <a
+            class="bg-blue-500 hover:scale-105 hover:bg-blue-600 text-white rounded-full"
+            href="../signin"
+            type="button"
+          >
+            Cancel
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

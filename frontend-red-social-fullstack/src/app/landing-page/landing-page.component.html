@@ -1,0 +1,354 @@
+<div class="container mx-auto h-screen">
+  <div class="flex flex-row justify-center">
+    <app-sidebar></app-sidebar>
+
+    <!-- Middle -->
+    <div class="w-full sm:w-600 h-screen" (scroll)="onScroll($event)" >
+      <!-- Header -->
+      <div
+        class="flex justify-between items-center border-b px-4 py-3 sticky top-0 bg-white dark:bg-dim-900 border-l border-r border-gray-200 dark:border-gray-700"
+      >
+        <!-- Title -->
+        <h2 class="text-gray-800 dark:text-gray-100 font-bold font-sm">Home</h2>
+        <!-- /Title -->
+
+        <!-- Custom Timeline -->
+        <div>
+          <svg
+            viewBox="0 0 24 24"
+            class="w-5 h-5 text-blue-400"
+            fill="currentColor"
+          >
+            <g>
+              <path
+                d="M22.772 10.506l-5.618-2.192-2.16-6.5c-.102-.307-.39-.514-.712-.514s-.61.207-.712.513l-2.16 6.5-5.62 2.192c-.287.112-.477.39-.477.7s.19.585.478.698l5.62 2.192 2.16 6.5c.102.306.39.513.712.513s.61-.207.712-.513l2.16-6.5 5.62-2.192c.287-.112.477-.39.477-.7s-.19-.585-.478-.697zm-6.49 2.32c-.208.08-.37.25-.44.46l-1.56 4.695-1.56-4.693c-.07-.21-.23-.38-.438-.462l-4.155-1.62 4.154-1.622c.208-.08.37-.25.44-.462l1.56-4.693 1.56 4.694c.07.212.23.382.438.463l4.155 1.62-4.155 1.622zM6.663 3.812h-1.88V2.05c0-.414-.337-.75-.75-.75s-.75.336-.75.75v1.762H1.5c-.414 0-.75.336-.75.75s.336.75.75.75h1.782v1.762c0 .414.336.75.75.75s.75-.336.75-.75V5.312h1.88c.415 0 .75-.336.75-.75s-.335-.75-.75-.75zm2.535 15.622h-1.1v-1.016c0-.414-.335-.75-.75-.75s-.75.336-.75.75v1.016H5.57c-.414 0-.75.336-.75.75s.336.75.75.75H6.6v1.016c0 .414.335.75.75.75s.75-.336.75-.75v-1.016h1.098c.414 0 .75-.336.75-.75s-.336-.75-.75-.75z"
+              ></path>
+            </g>
+          </svg>
+        </div>
+        <!-- /Custom Timeline -->
+      </div>
+      <!-- /Header -->
+
+      <!-- Post Tweet -->
+      <form
+        class="border-b border-gray-200 dark:border-dim-200 pb-4 border-l border-r"
+        [formGroup]="postForm"
+        (submit)="onCreatePost()"
+        type="submit"
+      >
+        <div class="flex flex-shrink-0 p-4 pb-0">
+          <div class="w-full p-2">
+            <input
+              class="dark:text-white text-gray-900 pl-3 placeholder-gray-400 w-full h-10 bg-transparent border-b border-solid border-grey-500 focus:outline-none resize-none"
+              placeholder="Give a Title to your post!"
+              formControlName="title"
+            />
+            <textarea
+              class="dark:text-white text-gray-900 placeholder-gray-400 w-full h-auto mt-2 bg-transparent border-0 focus:outline-none resize-none"
+              placeholder="What's happening?"
+              formControlName="content"
+              rows="2"
+            ></textarea>
+          </div>
+        </div>
+        <div class="w-full flex items-top p-2 text-white pl-14">
+          <button
+            type="submit"
+            (click)="onCreatePost()"
+            [disabled]="!buttonPostEnable"
+            class="bg-blue-400 hover:bg-blue-500 text-white rounded-full py-1 px-4 ml-auto mr-1 disable:bg-neutral-600"
+          >
+            <span class="font-bold text-sm">Post!</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- /Post Tweet -->
+
+      <!-- Timeline -->
+
+      <!-- Tweet -->
+      @for (singlePost of postList; track singlePost._id){
+      <div
+        class="border-b border-gray-200 dark:border-dim-200 hover:bg-gray-100 dark:hover:bg-dim-300 cursor-pointer transition duration-350 ease-in-out pb-4 border-l border-r"
+      >
+        <!-- Tweet Header-->
+        <div class="flex flex-shrink-0 p-4 pb-0">
+          <a class="flex-shrink-0 group block">
+            <div class="flex items-top">
+              <div class="ml-3 pl-9 mb-5">
+                <p
+                  class="flex items-center text-base leading-6 font-medium text-gray-800 dark:text-white"
+                >
+                  {{ singlePost.user.fullName }}
+                  <span
+                    class="ml-10 text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150"
+                  >
+                    {{ singlePost.title }}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <!-- Tweet Header-->
+
+        <!-- Tweet Content-->
+        <div class="px-16 text-pretty">
+          <p
+            class="text-base width-auto font-medium text-gray-800 dark:text-white flex-shrink"
+          >
+            {{ singlePost.content }}
+          </p>
+
+          <div class="flex mt-5">
+            <div class="w-full">
+              <div class="flex items-center justify-between gap-5">
+                <button
+                  (click)="this.likePost(singlePost._id)"
+                  type="button"
+                  class="flex items-center w-min dark:text-white text-xs text-gray-400 hover:text-red-600 dark:hover:text-red-600 transition duration-350 ease-in-out"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="w-5 h-5 mr-2"
+                  >
+                    <g>
+                      <path
+                        d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12zM7.354 4.225c-2.08 0-3.903 1.988-3.903 4.255 0 5.74 7.034 11.596 8.55 11.658 1.518-.062 8.55-5.917 8.55-11.658 0-2.267-1.823-4.255-3.903-4.255-2.528 0-3.94 2.936-3.952 2.965-.23.562-1.156.562-1.387 0-.014-.03-1.425-2.965-3.954-2.965z"
+                      ></path>
+                    </g>
+                  </svg>
+                  <span> {{ singlePost.likes }}</span>
+                </button>
+                @if (userId == singlePost.user._id){
+                <button
+                  (click)="deletePost(singlePost._id)"
+                  type="button"
+                  title="Delete"
+                  class="flex items-center dark:text-white text-xs text-gray-400 transition duration-350 ease-in-out"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="icon icon-tabler icon-tabler-trash"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M4 7l16 0" />
+                    <path d="M10 11l0 6" />
+                    <path d="M14 11l0 6" />
+                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                  </svg>
+                </button>
+                }
+                <!-- Edit Tweet -->
+                @if(userId == singlePost.user._id){
+                <button
+                  type="button"
+                  title="Edit"
+                  class="flex items-center dark:text-white text-xs text-gray-400 transition duration-350 ease-in-out"
+                  data-modal-target="authentication-modal"
+                  data-modal-toggle="authentication-modal"
+                  (click)="initEditForm(singlePost)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="icon icon-tabler icon-tabler-pencil"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"
+                    />
+                    <path d="M13.5 6.5l4 4" />
+                  </svg>
+                </button>
+                }
+                <!-- Main modal -->
+                @if(userId == singlePost.user._id){
+                <div
+                  id="authentication-modal"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                >
+                  <div class="relative p-4 w-full max-w-md max-h-full">
+                    <!-- Modal content -->
+                    <div
+                      class="relative bg-white rounded-lg shadow dark:bg-gray-700"
+                    >
+                      <!-- Modal header -->
+                      <div
+                        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+                      >
+                        <h3
+                          class="text-xl font-semibold text-gray-900 dark:text-white"
+                        >
+                          Edit your post
+                        </h3>
+                        <button
+                          type="button"
+                          class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                          data-modal-hide="authentication-modal"
+                        >
+                          <svg
+                            class="w-3 h-3"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 14 14"
+                          >
+                            <path
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                            />
+                          </svg>
+                          <span class="sr-only">Close modal</span>
+                        </button>
+                      </div>
+                      <!-- Modal body -->
+                      <div class="p-4 md:p-5">
+                        <form
+                          class="space-y-4"
+                          [formGroup]="editPostForm"
+                          (submit)="editPost()"
+                        >
+                          <div>
+                            <input
+                              type="text"
+                              name="postEditTitle"
+                              id="postEditTitle"
+                              formControlName="title"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            />
+                          </div>
+                          <div>
+                            <input
+                              type="text"
+                              name="postEditContent"
+                              id="postEditContent"
+                              formControlName="content"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            />
+                          </div>
+                          <button
+                            type="submit"
+                            data-modal-hide="authentication-modal"
+                            class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                          >
+                            Update!
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                }
+                <!-- Edit Tweet -->
+                <div
+                  class="flex items-center dark:text-white text-xs text-gray-400 transition duration-350 ease-in-out"
+                >
+                  {{ singlePost.createdAt | date : "fullDate" }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Tweet Content-->
+      </div>
+      }@empty {
+        EmptyList
+      }
+      <!-- /Tweet -->
+
+      <!-- Spinner -->
+      <!-- <div
+        class="flex items-center justify-center p-4 border-b border-l border-r border-gray-200 dark:border-gray-700"
+      >
+        <svg class="w-8 h-8 animate-spin-fast">
+          <circle
+            cx="16"
+            cy="16"
+            fill="none"
+            r="14"
+            stroke-width="4"
+            style="stroke: rgb(29, 161, 242); opacity: 0.2"
+          ></circle>
+          <circle
+            cx="16"
+            cy="16"
+            fill="none"
+            r="14"
+            stroke-width="4"
+            style="
+              stroke: rgb(29, 161, 242);
+              stroke-dasharray: 80;
+              stroke-dashoffset: 60;
+            "
+          ></circle>
+        </svg>
+      </div> -->
+      <!-- /Spinner -->
+
+      <!-- /Timeline -->
+    </div>
+    <!-- /Middle -->
+
+    <!-- Right -->
+    <div class="hidden md:block w-290 lg:w-350 h-screen">
+      <div class="flex flex-col fixed overflow-y-auto w-290 lg:w-350 h-screen">
+        <!-- Search -->
+
+        <div
+          class="absolute text-gray-600 flex items-center pl-4 h-full cursor-pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon icon-tabler icon-tabler-mail"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"
+            ></path>
+          </svg>
+        </div>
+        <input
+          (keyup)="this.fetchPostByTitle()"
+          [(ngModel)]="this.pagination.data!.title"
+          class="w-full bg-gray-200 dark:bg-dim-400 border-gray-200 dark:border-dim-400 text-gray-100 focus:bg-gray-100 dark:focus:bg-dim-900 focus:outline-none focus:border focus:border-blue-200 font-normal h-9 flex items-center pl-12 text-sm rounded-full border shadow"
+          placeholder="Search by post title..."
+        />
+
+        <!-- /Search -->
+      </div>
+    </div>
+    <!-- /Right -->
+  </div>
+</div>
